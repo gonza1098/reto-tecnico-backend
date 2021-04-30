@@ -1,0 +1,21 @@
+{
+  "name": "reto-tecnico-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "query-string": "^7.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-work:gonza1098/reto-tecnico-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
