@@ -1,0 +1,153 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2021-04-30T18:18:04Z",
+    "title": "reto-tecnico-backend-production",
+    "description": "apis persona cre crea y lista una persona utilizando swapi y dynamoDB"
+  },
+  "host": "yw7vqc2t59.execute-api.us-east-2.amazonaws.com",
+  "basePath": "/production",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/people": {
+      "get": {
+        "description": "Retorna todas las personas registradas en la tabla people - DynamoDB",
+        "responses": {
+          "200": {
+            "mensaje": "Personas listadas correctamente",
+            "results": "lista de personas",
+            "estado": true
+          },
+          "400": {
+            "mensaje": "Bad request"
+          },
+          "404": {
+            "mensaje": "Error en listar personas",
+            "estado": false
+          }
+        }
+      },
+      "post": {
+        "description": "Inserta una persona en la tabla people - DynamoDB",
+        "parameters": [
+          {
+            "in":"body",
+            "nombre": "Luke Fortuna", 
+            "altura": "188", 
+            "masa": "84", 
+            "color_de_pelo": "negro", 
+            "color_de_piel": "intermedia", 
+            "color_de_ojos": "marrones", 
+            "fecha_de_nacimiento": "1998-08-10", 
+            "genero": "Hombre", 
+            "mundo_natal": "https://swapi.py4e.com/api/planets/1/", 
+            "peliculas": [
+              "https://swapi.py4e.com/api/films/4/", 
+              "https://swapi.py4e.com/api/films/5/", 
+              "https://swapi.py4e.com/api/films/6/"
+            ], 
+            "especies": [
+              "https://swapi.py4e.com/api/species/1/"
+            ], 
+            "vehiculos": [
+              "https://swapi.py4e.com/api/vehicles/44/", 
+              "https://swapi.py4e.com/api/vehicles/46/"
+            ], 
+            "naves_estelares": [
+              "https://swapi.py4e.com/api/starships/39/", 
+              "https://swapi.py4e.com/api/starships/59/", 
+              "https://swapi.py4e.com/api/starships/65/"
+            ]      
+          }    
+        ],
+        "responses": {
+          "201": {
+            "mensaje": "Persona creada  satisfactoriamente",
+            "estado": true
+          },
+          "400": {
+            "mensaje": "Bad request"
+          },
+          "404": {
+            "mensaje": "Error en crear persona",
+            "estado": false
+          }
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people/{id}": {
+      "get": {
+        "description": "Busca por ID y retorna una persona registrada en la tabla people(DynamoDB) o de swapi(the Star Wars API!)",
+        "parameters": [
+          {
+            "in":"path",
+            "id":"1"
+          }    
+        ],
+        "responses": {
+          "200": {
+            "mensaje": "Persona listada correctamente",
+            "estado": true
+          },
+          "400": {
+            "mensaje": "Bad request"
+          },
+          "404": {
+            "mensaje": "Error en listar persona",
+            "estado": false
+          }
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

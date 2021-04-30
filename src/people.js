@@ -4,19 +4,19 @@ const fetch = require('node-fetch');
 
 const ddb = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'}); //conexion dynamodb 
 
-const returnResponse = (statusCode, params, callback) => {
+const returnResponse = (statusCode, params) => {
   const response = {
+    "isBase64Encoded": true|false,
     statusCode: statusCode,
     headers:{
       'Access-Control-Allow-Origin':'*', //requerido para CORS
     },
     body:  JSON.stringify(params)
   };
-
-  callback(null, response)
+  return response
 };
 
-module.exports.getPeople = async (event, context, callback) => {
+module.exports.getPeople = async (event, context) => {
   try {
     let  nextQuery = event["queryStringParameters"];
 
@@ -36,10 +36,10 @@ module.exports.getPeople = async (event, context, callback) => {
       "mensaje": 'Personas listadas correctamente',
       // nextPage: nextQuery,
       "results": peoples.Items,
-      "estado":true
+      "estado": true
     }
 
-    returnResponse(200, params, callback);
+    return returnResponse(200, params);
 
   } catch (err) {
 
@@ -48,12 +48,12 @@ module.exports.getPeople = async (event, context, callback) => {
       "estado": false
     }
 
-    returnResponse(404, params, callback);
+    return returnResponse(404, params);
 
   }
 };
 
-module.exports.getPeopleById = async (event, context, callback) => {
+module.exports.getPeopleById = async (event, context) => {
   try {
     let  idPeople =  event['pathParameters'].id;
     const  dynomoParams = {
@@ -71,48 +71,41 @@ module.exports.getPeopleById = async (event, context, callback) => {
       const swapiParams = {
         method: "GET",
       };
-      let params = {};
 
-      await fetch(url, swapiParams).then(res => res.json())
-      .then(json => {
-        params = {
-          "mensaje": json.detail == 'Not found' ? 'Id no encontrado o no registrado':'Persona listada correctamente de SWAPI',
-          "people":  json.detail == 'Not found' ? null:json,
-          "estado": json.detail == 'Not found' ? false:true
-        }
-        returnResponse(200, params, callback);
-      })
-      .catch(err => {
-        console.log(err);
-        params = {
-          "mensaje": err.message||'Error en listar personas',
-          "estado": false
-        }
-        returnResponse(404, params, callback);
-      });
-      // returnResponse(404, params, callback);
+      let swapiPeople = await fetch(url, swapiParams);
+
+     let peopleSwapi = await swapiPeople.json();
+
+      let params = {
+        "mensaje": peopleSwapi.detail == 'Not found' ? 'Id no encontrado o no registrado':'Persona listada correctamente de SWAPI',
+        "people": peopleSwapi.detail == 'Not found' ? null: peopleSwapi,
+        "estado": peopleSwapi.detail == 'Not found' ? false: true
+      }
+
+      return returnResponse(200, params);
+
     }else{
       let params = {
         "mensaje": 'Persona listada correctamente de DynamoDB',
         "people":   people.Item,
         "estado": true
       }
-      returnResponse(200, params, callback);
+      return returnResponse(200, params);
     }
 
   } catch (err) {
 
     let params = {
-      "mensaje": err.message||'Error en listar personas',
+      "mensaje": err.message||'Error en listar persona',
       "estado": false
     }
 
-    returnResponse(404, params, callback);
+    return returnResponse(404, params);
 
   }
 };
 
-module.exports.createPeople = async (event, context, callback) => {
+module.exports.createPeople = async (event, context) => {
   try {
 
     const host = event.headers.Host;
@@ -137,8 +130,8 @@ module.exports.createPeople = async (event, context, callback) => {
         "especies": body.especies, 
         "vehiculos": body.vehiculos, 
         "naves_estelares": body.naves_estelares,   
-        "creado": new Date(), 
-        "editado": new Date(), 
+        "creado": String(new Date()), 
+        "editado":String(new Date()), 
         "url": `https://${host}${path}/${requestId}`
       },
       ReturnValues: 'ALL_OLD'
@@ -152,7 +145,7 @@ module.exports.createPeople = async (event, context, callback) => {
       "estado":true
     }
 
-    returnResponse(200, params, callback);
+    return returnResponse(201, params);
 
   } catch (err) {
 
@@ -161,6 +154,8 @@ module.exports.createPeople = async (event, context, callback) => {
       "estado": false
     }
 
-    returnResponse(404, params, callback);
+    return returnResponse(404, params);
   }
 };
+
+module.exports.returnResponse = returnResponse;
