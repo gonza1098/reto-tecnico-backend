@@ -5,7 +5,7 @@
     "title": "reto-tecnico-backend-production",
     "description": "apis persona cre crea y lista una persona utilizando swapi y dynamoDB"
   },
-  "host": "yw7vqc2t59.execute-api.us-east-2.amazonaws.com",
+  "host": "oqunjeswch.execute-api.us-east-2.amazonaws.com",
   "basePath": "/production",
   "schemes": [
     "https"
